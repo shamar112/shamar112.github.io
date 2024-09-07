@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriv MT5 Launcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        iframe {
+            width: 100%;
+            height: 90vh;
+            border: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Deriv Server</h1>
+    <button onclick="loadUrl('https://mt5-real02-web-svg.deriv.com/terminal?server=DerivSVG-Server-02')">Deriv SVG Server 2</button>
+    <button onclick="loadUrl('https://mt5-real01-web-svg.deriv.com/terminal?server=Deriv-SVG')">Deriv SVG Server</button>
+    <button onclick="loadUrl('https://mt5-demo-web.deriv.com/terminal?server=Deriv-Demo')">Deriv Demo</button>
+
+    <iframe id="webview" src="" allow="fullscreen"></iframe>
+
+    <script>
+        function loadUrl(url) {
+            document.getElementById('webview').src = url;
+        }
+    </script>
+</body>
+</html>
