@@ -24,6 +24,9 @@
             font-size: 2rem;
             margin-bottom: 30px;
         }
+        .recent-server {
+            margin-bottom: 20px;
+        }
         .card-container {
             display: flex;
             justify-content: center;
@@ -62,14 +65,22 @@
 <body>
     <div id="menu">
         <h1>Select Deriv MT5 Server</h1>
+
+        <div id="recent-server" class="recent-server" style="display: none;">
+            <h2>Recent Server</h2>
+            <div class="card" id="recent-server-card" onclick="loadRecentServer()">
+                <span id="recent-server-name"></span>
+            </div>
+        </div>
+
         <div class="card-container">
-            <div class="card" onclick="loadUrl('https://mt5-real02-web-svg.deriv.com/terminal?server=DerivSVG-Server-02')">
+            <div class="card" onclick="loadUrl('https://mt5-real02-web-svg.deriv.com/terminal?server=DerivSVG-Server-02', 'Deriv SVG Server 2')">
                 <span>Deriv SVG Server 2</span>
             </div>
-            <div class="card" onclick="loadUrl('https://mt5-real01-web-svg.deriv.com/terminal?server=Deriv-SVG')">
+            <div class="card" onclick="loadUrl('https://mt5-real01-web-svg.deriv.com/terminal?server=Deriv-SVG', 'Deriv SVG Server')">
                 <span>Deriv SVG Server</span>
             </div>
-            <div class="card" onclick="loadUrl('https://mt5-demo-web.deriv.com/terminal?server=Deriv-Demo')">
+            <div class="card" onclick="loadUrl('https://mt5-demo-web.deriv.com/terminal?server=Deriv-Demo', 'Deriv Demo')">
                 <span>Deriv Demo</span>
             </div>
         </div>
@@ -78,13 +89,35 @@
     <iframe id="webview" allow="fullscreen"></iframe>
 
     <script>
-        function loadUrl(url) {
-            // Hide the menu
+        // Function to load the URL and store the last used server in localStorage
+        function loadUrl(url, serverName) {
+            // Store the recent server in localStorage
+            localStorage.setItem('recentServerUrl', url);
+            localStorage.setItem('recentServerName', serverName);
+
+            // Hide the menu and show the iframe
             document.getElementById('menu').style.display = 'none';
-            // Show the iframe and load the selected URL
             var iframe = document.getElementById('webview');
             iframe.style.display = 'block';
             iframe.src = url;
+        }
+
+        // Function to load the most recent server
+        function loadRecentServer() {
+            var url = localStorage.getItem('recentServerUrl');
+            if (url) {
+                loadUrl(url, localStorage.getItem('recentServerName'));
+            }
+        }
+
+        // On page load, check if there's a recent server
+        window.onload = function() {
+            var recentServerName = localStorage.getItem('recentServerName');
+            if (recentServerName) {
+                // Show the "Recent Server" section and populate it
+                document.getElementById('recent-server').style.display = 'block';
+                document.getElementById('recent-server-name').textContent = recentServerName;
+            }
         }
     </script>
 </body>
