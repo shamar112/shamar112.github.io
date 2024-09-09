@@ -54,11 +54,11 @@
             font-weight: bold;
             color: #555;
         }
-        iframe {
+        #content {
             width: 100%;
             height: 100vh;
-            border: none;
-            display: none; /* Initially hide the iframe */
+            padding: 20px;
+            overflow: auto;
         }
     </style>
 </head>
@@ -74,7 +74,7 @@
         </div>
 
         <button>
-            <a href="https://mt5-demo-web.deriv.com/terminal?server=Deriv-Demo">Demo Server</a>
+            <a href="#" onclick="loadUrl('https://mt5-demo-web.deriv.com/terminal?server=Deriv-Demo', 'Deriv Demo')">Demo Server</a>
         </button>
         <div class="card-container">
             <div class="card" onclick="loadUrl('https://mt5-real02-web-svg.deriv.com/terminal?server=DerivSVG-Server-02', 'Deriv SVG Server 2')">
@@ -95,20 +95,32 @@
         </div>
     </div>
 
-    <iframe id="webview" allow="fullscreen"></iframe>
+    <div id="content" style="display: none;"></div>
 
     <script>
-        // Function to load the URL and store the last used server in localStorage
+        // Function to load the content without changing the URL
         function loadUrl(url, serverName) {
             // Store the recent server in localStorage
             localStorage.setItem('recentServerUrl', url);
             localStorage.setItem('recentServerName', serverName);
 
-            // Hide the menu and show the iframe
+            // Hide the menu and show the content div
             document.getElementById('menu').style.display = 'none';
-            var iframe = document.getElementById('webview');
-            iframe.style.display = 'block';
-            iframe.src = url;
+            var contentDiv = document.getElementById('content');
+            contentDiv.style.display = 'block';
+
+            // Fetch the page content and replace the content div's innerHTML
+            fetch(url, { mode: 'cors' })
+                .then(response => response.text())
+                .then(html => {
+                    contentDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = `<p>Error loading the page: ${error.message}</p>`;
+                });
+
+            // Update the history state
+            history.pushState({ serverName: serverName }, serverName, '#');
         }
 
         // Function to load the most recent server
@@ -126,6 +138,13 @@
                 // Show the "Recent Server" section and populate it
                 document.getElementById('recent-server').style.display = 'block';
                 document.getElementById('recent-server-name').textContent = recentServerName;
+            }
+        }
+
+        // Handle the back/forward buttons
+        window.onpopstate = function(event) {
+            if (event.state && event.state.serverName) {
+                loadRecentServer();
             }
         }
     </script>
