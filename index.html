@@ -103,24 +103,9 @@
             // Store the recent server in localStorage
             localStorage.setItem('recentServerUrl', url);
             localStorage.setItem('recentServerName', serverName);
-
-            // Hide the menu and show the content div
-            document.getElementById('menu').style.display = 'none';
-            var contentDiv = document.getElementById('content');
-            contentDiv.style.display = 'block';
-
-            // Fetch the page content and replace the content div's innerHTML
-            fetch(url, { mode: 'cors' })
-                .then(response => response.text())
-                .then(html => {
-                    contentDiv.innerHTML = html;
-                })
-                .catch(error => {
-                    contentDiv.innerHTML = `<p>Error loading the page: ${error.message}</p>`;
-                });
-
-            // Update the history state
-            history.pushState({ serverName: serverName }, serverName, '#');
+        
+            // Redirect the user to the selected server without changing the current URL
+            window.location.href = url;
         }
 
         // Function to load the most recent server
